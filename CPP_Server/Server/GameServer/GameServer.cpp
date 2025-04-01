@@ -6,7 +6,7 @@
 #include <mutex>
 #include <Windows.h>
 
-#include "UserManager_5Day.h"
+#include "UserManager_5Day.h" 
 #include "AccountManager_5Day.h"
 
 #pragma region Chap1 ~ Chap9(SpinLock)
@@ -160,5 +160,61 @@
 
 #pragma endregion
 
+
+#pragma region Chap11(Condition Variable)
+
+condition_variable cv;
+
+mutex m;
+queue<int32> q;                                            
+HANDLE handle;
+
+void Producer()
+{
+	while (true) 
+	{
+		/*1) Lock 잡기
+		2) 공유 변수 값 작업 - 데이터 작업
+		3) Lock 풀기
+		4) 조건 변수를 통해 다른 쓰레드에게 통지*/
+
+		{
+			unique_lock<mutex> lock(m);
+			q.push(100);
+		}
+
+		 
+	}
+}
+
+void Consumer()
+{
+	while (true)
+	{
+		unique_lock<mutex> lock(m);
+
+		cv.wait(lock, []() {return q.empty() == false; });
+
+		//if (!q.empty())
+		{
+			int32 data = q.front();
+			q.pop();
+			cout << data << endl;
+		}
+	}
+}
+
+int main()
+{
+	handle = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+
+	thread t1(Producer);
+	thread t2(Consumer);
+
+	t1.join();
+	t2.join();
+}
+
+#pragma endregion
 
 
