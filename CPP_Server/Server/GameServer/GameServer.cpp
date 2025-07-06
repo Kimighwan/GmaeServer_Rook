@@ -162,59 +162,198 @@
 
 
 #pragma region Chap11(Condition Variable)
-
-condition_variable cv;
-
-mutex m;
-queue<int32> q;                                            
-HANDLE handle;
-
-void Producer()
-{
-	while (true) 
-	{
-		/*1) Lock 잡기
-		2) 공유 변수 값 작업 - 데이터 작업
-		3) Lock 풀기
-		4) 조건 변수를 통해 다른 쓰레드에게 통지*/
-
-		{
-			unique_lock<mutex> lock(m);
-			q.push(100);
-		}
-
-		 
-	}
-}
-
-void Consumer()
-{
-	while (true)
-	{
-		unique_lock<mutex> lock(m);
-
-		cv.wait(lock, []() {return q.empty() == false; });
-
-		//if (!q.empty())
-		{
-			int32 data = q.front();
-			q.pop();
-			cout << data << endl;
-		}
-	}
-}
-
-int main()
-{
-	handle = ::CreateEvent(NULL, FALSE, FALSE, NULL);
-
-	thread t1(Producer);
-	thread t2(Consumer);
-
-	t1.join();
-	t2.join();
-}
+//
+//condition_variable cv;
+//
+//mutex m;
+//queue<int32> q;                                            
+//HANDLE handle;
+//
+//void Producer()
+//{
+//	while (true) 
+//	{
+//		/*1) Lock 잡기
+//		2) 공유 변수 값 작업 - 데이터 작업
+//		3) Lock 풀기
+//		4) 조건 변수를 통해 다른 쓰레드에게 통지*/
+//
+//		{
+//			unique_lock<mutex> lock(m);
+//			q.push(100);
+//		}
+//
+//		 
+//	}
+//}
+//
+//void Consumer()
+//{
+//	while (true)
+//	{
+//		unique_lock<mutex> lock(m);
+//
+//		cv.wait(lock, []() {return q.empty() == false; });
+//
+//		//if (!q.empty())
+//		{
+//			int32 data = q.front();
+//			q.pop();
+//			cout << data << endl;
+//		}
+//	}
+//}
+//
+//int main()
+//{
+//	handle = ::CreateEvent(NULL, FALSE, FALSE, NULL);
+//
+//	thread t1(Producer);
+//	thread t2(Consumer);
+//
+//	t1.join();
+//	t2.join();
+//}
 
 #pragma endregion
 
+#pragma region Chap12 - Future
+
+//#include <future>
+//
+//int result;
+//
+//int Calculate()
+//{
+//	int sum = 0;
+//
+//	for (int i = 0; i < 100'000; i++)\
+//		sum += i;
+//
+//	result = sum; // 방법 2
+//
+//	return sum;
+//}
+//
+//void PromiseWorker(promise<string>&& promise)
+//{
+//	promise.set_value("Secret Message");
+//}
+//
+//void TaskWorker(packaged_task<int(void)> && task)
+//{
+//	task();
+//}
+//
+//int main() {
+//
+//	//// 동기(synchronous)실행
+//	//int sum = Calculate();
+//	//cout << sum << endl;
+//
+//	////방법 1 - start
+//	//thread t(Calculate());
+//
+//	//// TODO
+//
+//	//t.join();
+//	//// 방법 1 - end
+//
+//	
+//	// std::future
+//
+//	future<int> future = async(launch::async, Calculate);
+//
+//	// TODO
+//	future_status status = future.wait_for(1ms);
+//	if (status == future_status::ready)
+//	{
+//
+//	}
+//
+//	int sum = future.get();
+//
+//
+//	class Knight
+//	{
+//	public:
+//		int GetHp() { return 100; }
+//	};
+//
+//	Knight knight;
+//	std::future<int> future2 = async(launch::async, &Knight::GetHp, knight);	// Kngiht::GetHp() 와 같다.
+//
+//	// std::promise
+//	{ 
+//		promise<string> promise;
+//		std::future<string> future3 = promise.get_future();
+//
+//		thread t3(PromiseWorker, move(promise));
+//
+//		string m = future3.get();
+//		cout << m;
+//
+//		t3.join();
+//	}
+//
+//
+//	// std::packaged_task
+//	{
+//		packaged_task<int(void)> task(Calculate);
+//		std::future<int> future4 = task.get_future();
+//
+//		thread t4(TaskWorker, move(task));
+//
+//		int sum4 = future4.get();
+//		cout << sum4;
+//	}
+//}
+
+#pragma endregion
+
+#pragma region  Chap13 - Chach
+
+//int buffer[10000][10000];
+//
+//int main() {
+//	memset(buffer, 0, sizeof(buffer));
+//
+//
+//	{
+//		auto start = GetTickCount64();
+//
+//		int sum = 0;
+//		for (int i = 0; i < 10000; i++)
+//			for (int j = 0; j < 10000; j++)
+//				sum += buffer[i][j];
+//
+//		auto end = GetTickCount64();
+//		cout << "TIme : " << (end - start) << endl;
+//	}
+//	// 더 빠름
+//
+//	{
+//		auto start = GetTickCount64();
+//
+//		int sum = 0;
+//		for (int i = 0; i < 10000; i++)
+//			for (int j = 0; j < 10000; j++)
+//				sum += buffer[j][i];
+//
+//		auto end = GetTickCount64();
+//		cout << "TIme : " << (end - start) << endl;
+//	}
+//	// 더 느림
+//}
+
+#pragma endregion
+
+
+#pragma region Chap14 - CPU Pipeㅣine
+
+int main() {
+
+}
+
+#pragma endregion
 
