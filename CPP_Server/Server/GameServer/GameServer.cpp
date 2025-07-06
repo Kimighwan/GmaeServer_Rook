@@ -351,9 +351,54 @@
 
 #pragma region Chap14 - CPU Pipeㅣine
 
-int main() {
-
-}
+//int x = 0;
+//int y = 0;
+//int r1 = 0;
+//int r2 = 0;
+//
+//volatile bool ready;
+//
+//void Thread_1() 
+//{
+//	if (!ready) return;
+//
+//	y = 1;	// Store y
+//	r1 = x;	// Load x
+//}
+//
+//void Thread_2()
+//{
+//	if (!ready) return;
+//
+//	x = 1;	// Store x
+//	r2 = y;	// Load y
+//}
+//
+//int main() {
+//	int cnt = 0;
+//
+//	while (1)
+//	{
+//		ready = false;
+//
+//		cnt++;
+//
+//		x = y = r1 = r2 = 0;
+//
+//		thread t1(Thread_1);
+//		thread t2(Thread_2);
+//
+//		ready = true;
+//
+//		t1.join();
+//		t2.join();
+//
+//		if (r1 == 0 && r2 == 0)
+//			break;
+//	}
+//
+//	cout << cnt << "번 만에 빠져나옴";
+//}
 
 #pragma endregion
 
