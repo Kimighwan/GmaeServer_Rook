@@ -348,7 +348,6 @@
 
 #pragma endregion
 
-
 #pragma region Chap14 - CPU Pipeㅣine
 
 //int x = 0;
@@ -402,3 +401,85 @@
 
 #pragma endregion
 
+#pragma region Chap15 - Memory Model
+
+atomic<bool> ready;
+int value;
+
+void Productor() {
+	value = 10;
+	ready.store(true, memory_order_seq_cst);
+
+	// ready.store(true, memory_order_release); 2버전
+}
+
+void Consumer() {
+	// 준비가 될 때 까지 기다린다.
+	while (ready.load(memory_order_seq_cst) == false)
+		;
+
+	// ready.store(true, memory_order_acquire); 2버전
+
+	cout << value << "\n";
+}
+
+
+
+
+atomic<bool> flag;
+
+int main() 
+{
+	flag = false;
+
+	//flag = true
+	flag.store(true, memory_order_seq_cst);
+
+	// bool val = flag;
+	bool val = flag.load(memory_order_seq_cst);
+
+	// 이전 flag 값을 prev에 넣고, flag 값을 수정
+	{
+		// 하지만 여기에서 다른 쓰레드가 접근해 수정하는 상황이 있다면,
+		// prev의 값은 유효하지 않겠지?
+		/*bool prev = flag;
+		flag = true;*/
+
+		// 쓰기를 하면서 동시에 값을 뺀다.
+		bool prev = flag.exchange(true);
+	}
+
+	// CAS(Compare-And-Swap) 조건부 수정
+	{
+		bool expected = false;
+		bool desired = true;
+		flag.compare_exchange_strong(expected, desired);
+
+		// 위는 아래 상황이다
+		if (flag == expected)
+		{
+			flag = desired;
+			return true;
+		}
+		else
+		{
+			expected = true;
+			return false;
+		}
+	}
+
+#pragma region 정책 설명
+
+	ready = false;
+	value = 0;
+	thread t1(Productor);
+	thread t2(Consumer);
+	t1.join();
+	t2.join();
+
+
+#pragma endregion
+
+}
+
+#pragma endregion
