@@ -520,18 +520,54 @@
 #pragma endregion
 
 #pragma region Chap17 - Lock_Based Stack/Queue
+//
+//LockStack<int> s;
+//LockQueue<int> q;
+//
+//void Push()
+//{
+//	while (true)
+//	{
+//		int value = rand() % 100;
+//		q.Push(value);
+//
+//		this_thread::sleep_for(10ms);
+//	}
+//}
+//
+//void Pop() {
+//	while (true)
+//	{
+//		int data = 0;
+//		if (q.TryPop(OUT data)/*q.WaitPop(OUT data)*/)
+//			cout << data << "\n";
+//	}
+//}
+//
+//int main() {
+//	thread t1(Push);
+//	thread t2(Pop);
+//	thread t3(Pop);
+//
+//	t1.join();
+//	t2.join();
+//	t3.join();
+//}
 
-LockStack<int> s;
-LockQueue<int> q;
+#pragma endregion
+
+#pragma region  Chap18 - Lock_Free Stack
+
+LockFreeStack<int> s;
 
 void Push()
 {
 	while (true)
 	{
 		int value = rand() % 100;
-		q.Push(value);
+		s.Push(value);
 
-		this_thread::sleep_for(10ms);
+		//this_thread::sleep_for(10ms); 극한의 상황을 보기 위해 주석 처리
 	}
 }
 
@@ -539,7 +575,7 @@ void Pop() {
 	while (true)
 	{
 		int data = 0;
-		if (q.TryPop(OUT data)/*q.WaitPop(OUT data)*/)
+		if (s.TryPop(OUT data)/*q.WaitPop(OUT data)*/)
 			cout << data << "\n";
 	}
 }

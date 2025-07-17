@@ -54,3 +54,78 @@ private:
 	condition_variable _condVar;
 };
 
+template<typename T>
+class LockFreeStack {
+	struct Node
+	{
+		Node(const T& value) : data(value)	// 생성자
+		{
+
+		}
+
+		T data;
+		Node* next;
+	};
+
+public:
+
+	void Push(const T& value)
+	{
+		Node* newNode = new Node(value);	// new Node
+		newNode->next = _head;
+
+		while (_head.compare_exchange_weak(newNode->next, newNode) == false)
+		{
+
+		}
+
+		/* 위 코드의 의미 유사 코드
+		if (_head == newNode->next)
+		{
+			_head = newNode;
+			return true;
+		}
+		else {
+			newNode->next = _head;
+			return false;
+		}
+		*/
+
+
+		_head = newNode;
+	}
+
+	bool TryPop(T& value) 
+	{
+		Node* oldNode = _head;
+
+		while (oldNode && _head.compare_exchange_weak(oldNode, oldNode->next) == false)
+		{
+
+		}
+
+		if (oldNode == nullptr) return false;
+
+		/* 위 코드의 의미 유사 코드
+		if (oldNode == _head)
+		{
+			_head = oldNode->next;
+			return true;
+		}
+		else 
+		{
+			oldNode = _head;
+			return false;
+		}
+		*/
+
+		// 여기 사이에 누군가 개입하면 유효하지 않은 값을 복사하게 되는 것이 아닌가?
+
+		value = oldNode->data;	// return Data
+
+		// delete oldNode;
+		return true;
+	}
+private:
+	atomic<Node*> _head;
+};
