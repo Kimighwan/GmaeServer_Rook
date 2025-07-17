@@ -9,6 +9,9 @@
 #include "UserManager_5Day.h" 
 #include "AccountManager_5Day.h"
 
+#include "ConcurrentStack.h"
+#include "ConcurrentQueue.h"
+
 #pragma region Chap1 ~ Chap9(SpinLock)
 
 //mutex m;
@@ -485,34 +488,70 @@
 #pragma endregion
 
 #pragma region Chap16 - Thread Local Storage
+//
+//thread_local int LThreadid = 0;
+//
+//void ThreadMain(int threadId)
+//{
+//	LThreadid = threadId;
+//
+//	while (true)
+//	{
+//		cout << "Hi! I am Thread" << LThreadid << "\n";
+//		this_thread::sleep_for(1s);
+//	}
+//}
+//
+//int main() {
+//	vector<thread> threads;
+//
+//	for (int i = 0; i < 10; i++)
+//	{
+//		int id = i + 1;
+//		threads.push_back(thread(ThreadMain, id));
+//	}
+//
+//
+//	for (thread& t : threads)
+//		t.join();
+//
+//}
 
-thread_local int LThreadid = 0;
+#pragma endregion
 
-void ThreadMain(int threadId)
+#pragma region Chap17 - Lock_Based Stack/Queue
+
+LockStack<int> s;
+LockQueue<int> q;
+
+void Push()
 {
-	LThreadid = threadId;
-
 	while (true)
 	{
-		cout << "Hi! I am Thread" << LThreadid << "\n";
-		this_thread::sleep_for(1s);
+		int value = rand() % 100;
+		q.Push(value);
+
+		this_thread::sleep_for(10ms);
+	}
+}
+
+void Pop() {
+	while (true)
+	{
+		int data = 0;
+		if (q.TryPop(OUT data)/*q.WaitPop(OUT data)*/)
+			cout << data << "\n";
 	}
 }
 
 int main() {
-	vector<thread> threads;
+	thread t1(Push);
+	thread t2(Pop);
+	thread t3(Pop);
 
-	for (int i = 0; i < 10; i++)
-	{
-		int id = i + 1;
-		threads.push_back(thread(ThreadMain, id));
-	}
-
-
-	for (thread& t : threads)
-		t.join();
-
+	t1.join();
+	t2.join();
+	t3.join();
 }
 
 #pragma endregion
-

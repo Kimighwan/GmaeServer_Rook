@@ -7,6 +7,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{3ac43308-e553-461b-8d01-12b7ec0c2257}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Main\5Day">
+      <UniqueIdentifier>{b551f900-38c4-45d7-9fc2-208f031b78bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameServer.cpp">
@@ -15,22 +18,34 @@
     <ClCompile Include="pch.cpp">
       <Filter>Utils</Filter>
     </ClCompile>
-    <ClCompile Include="AccountManager_5Day.cpp">
+    <ClCompile Include="ConcurrentQueue.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="UserManager_5Day.cpp">
+    <ClCompile Include="ConcurrentStack.cpp">
       <Filter>Main</Filter>
+    </ClCompile>
+    <ClCompile Include="AccountManager_5Day.cpp">
+      <Filter>Main\5Day</Filter>
+    </ClCompile>
+    <ClCompile Include="UserManager_5Day.cpp">
+      <Filter>Main\5Day</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.h">
       <Filter>Utils</Filter>
     </ClInclude>
-    <ClInclude Include="AccountManager_5Day.h">
+    <ClInclude Include="ConcurrentQueue.h">
       <Filter>Main</Filter>
     </ClInclude>
-    <ClInclude Include="UserManager_5Day.h">
+    <ClInclude Include="ConcurrentStack.h">
       <Filter>Main</Filter>
+    </ClInclude>
+    <ClInclude Include="AccountManager_5Day.h">
+      <Filter>Main\5Day</Filter>
+    </ClInclude>
+    <ClInclude Include="UserManager_5Day.h">
+      <Filter>Main\5Day</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
