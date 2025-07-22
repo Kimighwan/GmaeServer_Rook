@@ -1,16 +1,23 @@
 #include "pch.h"
 #include <iostream>
 
-#include <thread>
+#include <CorePch.h>
+
 #include <atomic>
 #include <mutex>
+
 #include <Windows.h>
+#include <future>
 
 #include "UserManager_5Day.h" 
 #include "AccountManager_5Day.h"
 
 #include "ConcurrentStack.h"
 #include "ConcurrentQueue.h"
+
+#include "CoreMacro.h"
+
+#include "ThreadManager.h"
 
 #pragma region Chap1 ~ Chap9(SpinLock)
 
@@ -623,6 +630,29 @@
 //	t2.join();
 //	t3.join();
 //}
+
+#pragma endregion
+
+#pragma region Chap24 - ThreadManager
+
+CoreGobal Core;
+
+void ThreadMain() {
+	while (true) {
+		cout << "Hi i am thread.." << LThreadId << endl;
+		this_thread::sleep_for(1s);
+	}
+}
+
+int main() {
+	//CRASH("test");
+	//int a = 3;
+	//ASSERT_CRASH(a != 3);
+
+	for (int i = 0; i < 5; i++)
+		GThreadManager->Launch(ThreadMain);
+	GThreadManager->Join();
+}
 
 #pragma endregion
 
