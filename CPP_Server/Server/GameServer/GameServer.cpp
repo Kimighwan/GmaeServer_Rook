@@ -557,37 +557,72 @@
 #pragma endregion
 
 #pragma region  Chap18 - Lock_Free Stack
-
-LockFreeStack<int> s;
-
-void Push()
-{
-	while (true)
-	{
-		int value = rand() % 100;
-		s.Push(value);
-
-		//this_thread::sleep_for(10ms); 극한의 상황을 보기 위해 주석 처리
-	}
-}
-
-void Pop() {
-	while (true)
-	{
-		int data = 0;
-		if (s.TryPop(OUT data)/*q.WaitPop(OUT data)*/)
-			cout << data << "\n";
-	}
-}
-
-int main() {
-	thread t1(Push);
-	thread t2(Pop);
-	thread t3(Pop);
-
-	t1.join();
-	t2.join();
-	t3.join();
-}
+//
+//LockFreeStack<int> s;
+//
+//void Push()
+//{
+//	while (true)
+//	{
+//		int value = rand() % 100;
+//		s.Push(value);
+//
+//		//this_thread::sleep_for(10ms); 극한의 상황을 보기 위해 주석 처리
+//	}
+//}
+//
+//void Pop() {
+//	while (true)
+//	{
+//		int data = 0;
+//		if (s.TryPop(OUT data)/*q.WaitPop(OUT data)*/)
+//			cout << data << "\n";
+//	}
+//}
+//
+//int main() {
+//	thread t1(Push);
+//	thread t2(Pop);
+//	thread t3(Pop);
+//
+//	t1.join();
+//	t2.join();
+//	t3.join();
+//}
 
 #pragma endregion
+
+#pragma region Chap18 - Lock_Free_Smart_Pointer
+//
+////LockFreeStack<int> s;
+//LockFreeStackSmartPointer<int> s;
+//
+//void Push()
+//{
+//	while (true)
+//	{
+//		int value = rand() % 100;
+//		s.Push(value);
+//		//this_thread::sleep_for(10ms); 극한의 상황을 보기 위해 주석 처리
+//	}
+//}
+//
+//void Pop() {
+//	while (true)
+//	{
+//		auto dat = s.TryPop();
+//	}
+//}
+//
+//int main() {
+//	thread t1(Push);
+//	thread t2(Pop);
+//	thread t3(Pop);
+//
+//	t1.join();
+//	t2.join();
+//	t3.join();
+//}
+
+#pragma endregion
+
