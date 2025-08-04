@@ -1,9 +1,15 @@
 #include "pch.h"
 #include "Lock.h"
 #include "CoreTLS.h"
+#include "DeadLockProfiler.h"
 
-void Lock::WriteLock()
+void Lock::WriteLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PushLock(name);
+#endif
+
+
 	// 2
 	// 만약 동일한 스레드가 소유하고 있다면 무조건 성곡하는 정책
 	// => 재귀적으로 락 잡기 허용 -> 같은 스레드가 같은 락을 잡는 상황
@@ -45,8 +51,12 @@ void Lock::WriteLock()
 	}
 }
 
-void Lock::WriteUnLock()
+void Lock::WriteUnLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PopLock(name);
+#endif
+
 	// ReadLock 다 풀기 전에는 WriteUnLock 불가능
 	// 지금 구현하는 정책은 R -> W를 불가능하기 때문에...
 	// 그러면 WirteLock에서 구현해야 하는 게 아님??
@@ -58,8 +68,12 @@ void Lock::WriteUnLock()
 		_lockFlag.store(EMPTY_FLAG);
 }
 
-void Lock::ReadLock()
+void Lock::ReadLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PushLock(name);
+#endif
+
 	// 동일한 스레드가 소유하고 있다면 가능
 	const uint32 currentLcokThreadId = (_lockFlag.load() & WRITE_THREAD_MASK) >> 16;
 	if (LThreadId == currentLcokThreadId)
@@ -90,8 +104,12 @@ void Lock::ReadLock()
 	}
 }
 
-void Lock::ReadUnLock()
+void Lock::ReadUnLock(const char* name)
 {
+#if _DEBUG
+	GDeadLockProfiler->PopLock(name);
+#endif
+
 	if ((_lockFlag.fetch_sub(1) & READ_THREAD_MASK) == 0)
 		CRASH("MULTIPLE_UNLOCK");
 }

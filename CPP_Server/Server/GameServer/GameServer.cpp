@@ -645,70 +645,76 @@
 #pragma endregion
 
 #pragma region Chap25 - Reader_Write Lock
+//
+//class TestLock 
+//{
+//	USE_LOCK;
+//
+//public:
+//	int32 TestRead()
+//	{
+//		READ_LOCK;
+//
+//		if (_queue.empty())
+//			return -1;
+//
+//		return _queue.front();
+//	}
+//
+//	void TestPush()
+//	{
+//		WRITE_LOCK;
+//
+//		_queue.push(rand() % 100);
+//	}
+//
+//	void TestPop()
+//	{
+//		WRITE_LOCK;
+//
+//		if (_queue.empty() == false)
+//			_queue.pop();
+//	}
+//private:
+//	queue<int32> _queue;
+//};
+//
+//TestLock testLock;
+//
+//void ThreadWrite()
+//{
+//	while (true)
+//	{
+//		testLock.TestPush();
+//		this_thread::sleep_for(1ms);
+//		testLock.TestPop();
+//	}
+//}
+//
+//void ThreadRead()
+//{
+//	while (true)
+//	{
+//		int value = testLock.TestRead();
+//		cout << value << endl;
+//		this_thread::sleep_for(1ms);
+//	}
+//}
+//
+//int main() {
+//	for (int i = 0; i < 2; i++)
+//		GThreadManager->Launch(ThreadWrite);
+//
+//	for (int i = 0; i < 5; i++)
+//		GThreadManager->Launch(ThreadRead);
+//
+//	GThreadManager->Join();
+//}
 
-class TestLock 
-{
-	USE_LOCK;
+#pragma endregion
 
-public:
-	int32 TestRead()
-	{
-		READ_LOCK;
+#pragma region Chap26 - DeadLock Detect
 
-		if (_queue.empty())
-			return -1;
 
-		return _queue.front();
-	}
-
-	void TestPush()
-	{
-		WRITE_LOCK;
-
-		_queue.push(rand() % 100);
-	}
-
-	void TestPop()
-	{
-		WRITE_LOCK;
-
-		if (_queue.empty() == false)
-			_queue.pop();
-	}
-private:
-	queue<int32> _queue;
-};
-
-TestLock testLock;
-
-void ThreadWrite()
-{
-	while (true)
-	{
-		testLock.TestPush();
-		this_thread::sleep_for(1ms);
-		testLock.TestPop();
-	}
-}
-
-void ThreadRead()
-{
-	while (true)
-	{
-		int value = testLock.TestRead();
-		cout << value << endl;
-		this_thread::sleep_for(1ms);
-	}
-}
-
-int main() {
-	for (int i = 0; i < 2; i++)
-		GThreadManager->Launch(ThreadWrite);
-
-	for (int i = 0; i < 5; i++)
-		GThreadManager->Launch(ThreadRead);
-
-	GThreadManager->Join();
-}
 
 #pragma endregion
