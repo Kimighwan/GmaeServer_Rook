@@ -3,13 +3,15 @@
 #include "ThreadManager.h"
 
 ThreadManager* GThreadManager = nullptr;
-
-CoreGobal::CoreGobal()
+class CoreGobal
 {
-	GThreadManager = new ThreadManager();
-}
-
-CoreGobal::~CoreGobal()
-{
-	delete GThreadManager;
-}
+public:
+	CoreGobal()
+	{
+		GThreadManager = new ThreadManager();
+	}
+	~CoreGobal()
+	{
+		delete GThreadManager;
+	}
+} GCoreGlobal;

@@ -18,6 +18,12 @@ ThreadManager::~ThreadManager()
 	Join();
 }
 
+void ThreadManager::InitTLS()
+{
+	static Atomic<int> SThreadId = 1;
+	LThreadId = SThreadId.fetch_add(1);
+}
+
 void ThreadManager::Launch(function<void(void)> callback)
 {
 	LockGuard guard(_lock);
@@ -38,12 +44,6 @@ void ThreadManager::Join()
 			t.join();
 	}
 	_threads.clear();
-}
-
-void ThreadManager::InitTLS()
-{
-	static Atomic<int> SThreadId = 1;
-	LThreadId = SThreadId.fetch_add(1);
 }
 
 void ThreadManager::DestroyTLS()

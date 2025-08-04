@@ -1,22 +1,15 @@
 #include "pch.h"
 #include <iostream>
-
 #include <CorePch.h>
-
 #include <atomic>
 #include <mutex>
-
-#include <Windows.h>
+#include <windows.h>
 #include <future>
-
-#include "UserManager_5Day.h" 
-#include "AccountManager_5Day.h"
-
-#include "ConcurrentStack.h"
-#include "ConcurrentQueue.h"
-
+//#include "UserManager_5Day.h" 
+//#include "AccountManager_5Day.h"
+//#include "ConcurrentStack.h"
+//#include "ConcurrentQueue.h"
 #include "CoreMacro.h"
-
 #include "ThreadManager.h"
 
 #pragma region Chap1 ~ Chap9(SpinLock)
@@ -169,7 +162,6 @@
 //}
 
 #pragma endregion
-
 
 #pragma region Chap11(Condition Variable)
 //
@@ -433,9 +425,6 @@
 //	cout << value << "\n";
 //}
 //
-//
-//
-//
 //atomic<bool> flag;
 //
 //int main() 
@@ -521,7 +510,6 @@
 //
 //	for (thread& t : threads)
 //		t.join();
-//
 //}
 
 #pragma endregion
@@ -635,24 +623,92 @@
 
 #pragma region Chap24 - ThreadManager
 
-CoreGobal Core;
+//CoreGobal Core;
+//
+//void ThreadMain() {
+//	while (true) {
+//		cout << "Hi i am thread.." << LThreadId << endl;
+//		this_thread::sleep_for(1s);
+//	}
+//}
+//
+//int main() {
+//	//CRASH("test");
+//	//int a = 3;
+//	//ASSERT_CRASH(a != 3);
+//
+//	for (int i = 0; i < 5; i++)
+//		GThreadManager->Launch(ThreadMain);
+//	GThreadManager->Join();
+//}
 
-void ThreadMain() {
-	while (true) {
-		cout << "Hi i am thread.." << LThreadId << endl;
-		this_thread::sleep_for(1s);
+#pragma endregion
+
+#pragma region Chap25 - Reader_Write Lock
+
+class TestLock 
+{
+	USE_LOCK;
+
+public:
+	int32 TestRead()
+	{
+		READ_LOCK;
+
+		if (_queue.empty())
+			return -1;
+
+		return _queue.front();
+	}
+
+	void TestPush()
+	{
+		WRITE_LOCK;
+
+		_queue.push(rand() % 100);
+	}
+
+	void TestPop()
+	{
+		WRITE_LOCK;
+
+		if (_queue.empty() == false)
+			_queue.pop();
+	}
+private:
+	queue<int32> _queue;
+};
+
+TestLock testLock;
+
+void ThreadWrite()
+{
+	while (true)
+	{
+		testLock.TestPush();
+		this_thread::sleep_for(1ms);
+		testLock.TestPop();
+	}
+}
+
+void ThreadRead()
+{
+	while (true)
+	{
+		int value = testLock.TestRead();
+		cout << value << endl;
+		this_thread::sleep_for(1ms);
 	}
 }
 
 int main() {
-	//CRASH("test");
-	//int a = 3;
-	//ASSERT_CRASH(a != 3);
+	for (int i = 0; i < 2; i++)
+		GThreadManager->Launch(ThreadWrite);
 
 	for (int i = 0; i < 5; i++)
-		GThreadManager->Launch(ThreadMain);
+		GThreadManager->Launch(ThreadRead);
+
 	GThreadManager->Join();
 }
 
 #pragma endregion
-
