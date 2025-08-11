@@ -718,3 +718,61 @@
 
 
 #pragma endregion
+
+#pragma region Chap27 - PS
+
+//bool IsPrime(int num)
+//{
+//	if (num <= 1) return false;
+//	if (num == 2 || num == 3) return true;
+//
+//	for (int i = 2; i < num; i++)
+//	{
+//		if (num % i == 0)
+//			return false;
+//	}
+//
+//	return true;
+//}
+//
+//int CountPrime(int start, int end)
+//{
+//	int count = 0;
+//
+//	for (int i = start; i <= end; i++)
+//	{
+//		if (IsPrime(i)) count++;
+//	}
+//
+//	return count;
+//}
+//
+//int main() {
+//	const int MAX_COUNT = 1'000'000;
+//
+//	vector<thread> threads;
+//
+//	int coreCount = thread::hardware_concurrency();
+//	int jobCount = (MAX_COUNT / coreCount) + 1;
+//
+//	atomic<int> primeCount = 0;
+//
+//	for (int i = 0; i < coreCount; i++)
+//	{
+//		int start = i * jobCount + 1;
+//		int end = min(MAX_COUNT, (i + 1) * jobCount);
+//
+//		threads.push_back(thread([start, end, &primeCount]()
+//			{
+//				primeCount += CountPrime(start, end);
+//			}
+//		));
+//	}
+//
+//	for (thread& t : threads)
+//		t.join();
+//
+//	cout << primeCount;
+//}
+
+#pragma endregion
